@@ -3,7 +3,43 @@ new toy launch,Sweden,Industry,Medium
 new toy launch,Finland,Industry,Medium
 new collectible launch,Sweden,Collectibles,High
 new collectible launch,Finland,Collectibles,High
+toy trend Japan,Asia Trend Scout,Asia Trends,High
+toy trend China,Asia Trend Scout,Asia Trends,High
+toy trend South Korea,Asia Trend Scout,Asia Trends,High
+blind box trend China,Asia Trend Scout,Blind Boxes,High
+blind box trend Japan,Asia Trend Scout,Blind Boxes,High
+collectible toy trend Korea,Asia Trend Scout,Collectibles,High
+viral toy Asia,Asia Trend Scout,Asia Trends,High
+new character IP Asia,Asia Trend Scout,Licensed,High
+Lucky Emma blind box,Global Scout,Blind Boxes,High
+Jotoys blind box,Global Scout,Blind Boxes,High
+Rebel Bear collectible,Global Scout,Blind Boxes,High
+Chiikawa toys blind box,Global Scout,Blind Boxes,High
+Aphmau toys collectible,Global Scout,Collectibles,High
+Pop Mart new release,Global Scout,Blind Boxes,High
+Pop Mart collaboration,Global Scout,Blind Boxes,High
+Roblox toy license,Global Scout,Gaming,High
+Roblox licensed toys,Sweden,Gaming,High
+Roblox licensed toys,Finland,Gaming,High
+Roblox game toy launch,Global Scout,Gaming,High
+anime toy license new,Global Scout,Anime,High
+anime collectible trend Japan,Asia Trend Scout,Anime,High
+anime toys Sweden,Sweden,Anime,Medium
+anime toys Finland,Finland,Anime,Medium
+Marvel toy launch,Global Scout,Licensed,High
+Marvel collectibles new,Global Scout,Licensed,High
+DC toy launch,Global Scout,Licensed,High
+DC collectibles new,Global Scout,Licensed,High
+Hasbro new toy,Global Scout,Industry,High
+NERF new launch,Global Scout,Outdoor Action,High
+Play-Doh new launch,Global Scout,Creative Play,High
+Furby new launch,Global Scout,Interactive Toys,Medium
+Transformers new toy,Global Scout,Action Figures,Medium
+Spin Master new toy,Global Scout,Industry,High
+Bitzee new launch,Global Scout,Interactive Toys,High
+PAW Patrol new toys,Global Scout,Preschool,Medium
 Build-A-Bear,Sweden,Plush,High
+Build-A-Bear,Finland,Plush,High
 Fuggler,Sweden,Collectibles,High
 Fuggler,Finland,Collectibles,High
 Pokemon toys,Sweden,Trading Cards,High
@@ -14,8 +50,23 @@ MINISO collaboration,Sweden,Lifestyle,High
 MINISO collaboration,Finland,Lifestyle,High
 Labubu Pop Mart,Sweden,Collectibles,High
 Labubu Pop Mart,Finland,Collectibles,High
-Mattel new toy,Sweden,Industry,Medium
-Hasbro new toy,Finland,Industry,Medium
-MGA Entertainment launch,Sweden,Dolls,Medium
-Sanrio collaboration,Finland,Licensed,Medium
-Disney toy launch,Sweden,Licensed,Medium
+Mattel new toy,Global Scout,Industry,Medium
+MGA Entertainment launch,Global Scout,Dolls,Medium
+Sanrio collaboration,Global Scout,Licensed,High
+Disney toy launch,Global Scout,Licensed,Medium
+Lekia toys,Sweden,Retailer,High
+Jollyroom toys,Sweden,Retailer,High
+Smyths Toys Sweden,Sweden,Retailer,High
+BR leksaker Sweden,Sweden,Retailer,Medium
+ToySpace Sweden,Sweden,Retailer,Medium
+Lekia kampanj,Sweden,Retailer,Medium
+Jollyroom leksaker nyhet,Sweden,Retailer,Medium
+XS Leksaker,Sweden,Retailer,High
+XS Lelut,Finland,Retailer,High
+Karkkainen lelut,Finland,Retailer,Medium
+Prisma lelut,Finland,Retailer,Medium
+Tokmanni lelut,Finland,Retailer,Medium
+K-Citymarket lelut,Finland,Retailer,Medium
+Verkkokauppa lelut,Finland,Retailer,Medium
+new toy retailer Sweden,Sweden,Retailer,Medium
+new toy retailer Finland,Finland,Retailer,Medium
