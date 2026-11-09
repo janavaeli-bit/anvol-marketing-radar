@@ -15,7 +15,7 @@ DATA_DIR=Path(__file__).parent/'data'
 MARKET_GEO={'Sweden':'SE','Finland':'FI','Estonia':'EE','Latvia':'LV','Lithuania':'LT'}
 CORE_MARKETS=list(MARKET_GEO.keys())
 
-@st.cache_data
+# Read small watchlists on every rerun so GitHub CSV updates are visible immediately.
 def load_csv(name): return pd.read_csv(DATA_DIR/name)
 
 def classify_signal(row):
@@ -87,6 +87,7 @@ st.title('Anvol Marketing Radar')
 st.caption('Recent toy launches, retail activity and discovery leads across Nordics & Baltics')
 days = st.sidebar.selectbox('Publication window (days)', [7, 30, 90], index=0)
 st.sidebar.caption('Only articles with a valid publication date inside this window are shown. Newest stories appear first.')
+st.sidebar.caption(f'Watchlists: {len(keywords)} keyword entries · {len(news_queries)} news searches · {len(social_queries)} social searches')
 if st.sidebar.button('Refresh all news'):
     fetch_market_news.clear()
     fetch_social_scout.clear()
