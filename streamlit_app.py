@@ -4,11 +4,7 @@ from radar_news import collect
 from pathlib import Path
 from datetime import datetime, timezone
 
-try:
-    from pytrends.request import TrendReq
-    PYTRENDS_AVAILABLE = True
-except Exception:
-    PYTRENDS_AVAILABLE = False
+from radar_demand import DemandStore
 
 st.set_page_config(page_title="Anvol Marketing Radar", page_icon="📈", layout="wide")
 DATA_DIR=Path(__file__).parent/'data'
@@ -63,15 +59,9 @@ def show_collection_status(label, status):
         with st.expander(f'{label} collection details'):
             st.text('\n'.join(status['errors']))
 
-@st.cache_data(ttl=21600,show_spinner=False)
-def fetch_search_demand(keyword_tuple,geo):
-    if not PYTRENDS_AVAILABLE:return None,'Google Trends connector is not available in this deployment.'
-    try:
-        pytrends=TrendReq(hl='en-US',tz=0,timeout=(10,25)); pytrends.build_payload(list(keyword_tuple),timeframe='today 3-m',geo=geo); df=pytrends.interest_over_time()
-        if df is None or df.empty:return pd.DataFrame(),None
-        if 'isPartial' in df.columns:df=df.drop(columns=['isPartial'])
-        return df,None
-    except Exception as exc:return None,f'Google Trends could not be loaded right now: {exc}'
+@st.cache_resource
+def demand_store():
+    return DemandStore()
 
 def demand_summary(df):
     rows=[]
@@ -122,13 +112,35 @@ with t3:
         c1,c2,c3=st.columns(3); cats=c1.multiselect('Category',sorted(social['Category'].unique()),default=sorted(social['Category'].unique())); platforms=c2.multiselect('Platform/source type',sorted(social['Platform'].unique()),default=sorted(social['Platform'].unique())); minimum=c3.slider('Minimum Social relevance',0,100,50); sv=social[social['Category'].isin(cats)&social['Platform'].isin(platforms)&(social['Social relevance']>=minimum)]; st.dataframe(sv[['Published','Age (days)','Social relevance','Platform','Headline','Category','Watch term','Source','Link']],use_container_width=True,hide_index=True,column_config={'Link':st.column_config.LinkColumn('Open')}); st.info('Next upgrade: direct platform APIs where commercially available. TikTok Research API is restricted to qualifying non-commercial research, so the commercial radar should not depend on it.')
 
 with t4:
-    st.subheader('Search Demand'); st.caption('Experimental Google Trends layer. Values are relative interest, not absolute search volume.'); c1,c2=st.columns([1,2]); market=c1.selectbox('Market',CORE_MARKETS); terms=keywords[keywords['Market']==market]['Keyword'].dropna().drop_duplicates().tolist(); selected=c2.multiselect('Compare up to 5 keywords',terms,default=terms[:5],max_selections=5)
-    if st.button('Refresh search demand'):fetch_search_demand.clear();st.rerun()
+    st.subheader('Search Demand')
+    st.caption('Experimental Google Trends layer. Values are relative interest, not absolute search volume. Load a comparison when needed; successful results are reused for up to 6 hours.')
+    market = st.selectbox('Market', CORE_MARKETS, key='demand_market')
+    terms = keywords[keywords['Market'] == market]['Keyword'].dropna().drop_duplicates().tolist()
+    with st.form('search_demand_form'):
+        selected = st.multiselect('Compare up to 5 keywords', terms, default=terms[:5], max_selections=5, key=f'demand_terms_{market}')
+        submitted = st.form_submit_button('Load search demand')
     if selected:
-        df,err=fetch_search_demand(tuple(selected),MARKET_GEO[market])
-        if err:st.warning(err)
-        elif df is None or df.empty:st.info('No data returned. Try broader terms, especially in smaller markets.')
-        else:st.line_chart(df,use_container_width=True);st.dataframe(demand_summary(df),use_container_width=True,hide_index=True)
+        with st.spinner('Loading search demand…'):
+            result = demand_store().get(tuple(selected), MARKET_GEO[market], request=submitted)
+        st.link_button('Open this comparison in Google Trends', result['url'])
+        if result['error']:
+            st.warning(result['error'])
+            if result['retry_seconds']:
+                st.caption(f"New comparisons can be requested in about {(result['retry_seconds'] + 59) // 60} minute(s). Existing cached comparisons remain available.")
+        df = result['data']
+        if result['fetched_at']:
+            st.caption(f"Last successful retrieval: {result['fetched_at']}")
+        if result['stale']:
+            st.warning('Showing the last successful comparison. It has not been refreshed and may be out of date.')
+        if df is not None and not df.empty:
+            st.line_chart(df, use_container_width=True)
+            st.dataframe(demand_summary(df), use_container_width=True, hide_index=True)
+        elif result['fetched_at']:
+            st.info('Google returned no measurable data for this comparison. Try fewer or broader terms; this is not proof of zero demand.')
+        elif not result['error']:
+            st.info('Choose keywords and click Load search demand. Other dashboard actions do not send Google Trends requests.')
+    else:
+        st.info('Select at least one keyword to load a comparison.')
 
 with t5:
     st.subheader('Keyword Watchlist'); st.dataframe(keywords,use_container_width=True,hide_index=True)
@@ -137,4 +149,5 @@ with t6:
 with t7:
     st.subheader('Watchlists'); st.markdown('### Market/news queries');st.dataframe(news_queries,use_container_width=True,hide_index=True);st.markdown('### Social/emerging queries');st.dataframe(social_queries,use_container_width=True,hide_index=True);st.markdown('### Search keyword universe');st.dataframe(keywords,use_container_width=True,hide_index=True)
 st.divider();st.caption(f"Radar · news cache up to 1h on app use · search demand cache up to 6h · Page rendered: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}")
+
 
